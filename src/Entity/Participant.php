@@ -179,4 +179,8 @@ class Participant implements UserInterface
     {
         // Si tu stockes des données sensibles dans l'entité, tu peux les effacer ici
     }
+    public function __toString(): string
+    {
+        return $this->nom;
+    }
 }
