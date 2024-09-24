@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
@@ -7,10 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: ParticipantRepository::class)]
-class Participant implements UserInterface
+class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -30,7 +29,7 @@ class Participant implements UserInterface
     private ?string $mail = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $motPasse = null;
+    private ?string $motPasse = null; // Mot de passe encodé
 
     #[ORM\Column]
     private ?bool $actif = null;
@@ -145,13 +144,21 @@ class Participant implements UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return $this->mail;  // Utilisation de l'adresse e-mail comme identifiant unique
+        return $this->mail;
+    }
+
+    /**
+     * Retourne le mot de passe encodé.
+     */
+    public function getPassword(): string
+    {
+        return $this->motPasse;
     }
 
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // Garantir que chaque utilisateur ait au moins le rôle ROLE_USER
+        // Ajoute toujours ROLE_USER par défaut
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -164,23 +171,14 @@ class Participant implements UserInterface
         return $this;
     }
 
-    public function getPassword(): string
-    {
-        return $this->motPasse;
-    }
-
     public function getSalt(): ?string
     {
-        // Si tu utilises bcrypt ou sodium pour hacher les mots de passe, tu n'as pas besoin de salt
+        // Pas nécessaire si bcrypt ou sodium est utilisé
         return null;
     }
 
     public function eraseCredentials()
     {
-        // Si tu stockes des données sensibles dans l'entité, tu peux les effacer ici
-    }
-    public function __toString(): string
-    {
-        return $this->nom;
+        // Supprime les données sensibles temporaires si nécessaire
     }
 }
