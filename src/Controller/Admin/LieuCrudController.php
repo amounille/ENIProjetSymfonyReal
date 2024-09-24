@@ -5,8 +5,10 @@ namespace App\Controller\Admin;
 use App\Entity\Lieu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FloatField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 
 class LieuCrudController extends AbstractCrudController
 {
@@ -15,14 +17,15 @@ class LieuCrudController extends AbstractCrudController
         return Lieu::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            IdField::new('id')->setDisabled(),
+            TextField::new('nom')->setLabel('Nom du Lieu'),
+            TextField::new('rue')->setLabel('Rue'),
+            NumberField::new('latitude')->setLabel('Latitude'),
+            NumberField::new('longitude')->setLabel('Longitude'),
+            AssociationField::new('lieuVille')->setLabel('Ville')->setRequired(true),
         ];
     }
-    */
 }
