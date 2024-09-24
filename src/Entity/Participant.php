@@ -181,4 +181,8 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // Supprime les données sensibles temporaires si nécessaire
     }
+    public function __toString(): string
+    {
+        return $this->nom;
+    }
 }
