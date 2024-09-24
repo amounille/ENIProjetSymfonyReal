@@ -41,7 +41,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $sorties;
 
     #[ORM\ManyToOne(inversedBy: 'participants')]
-    private ?campus $participantCampus = null;
+    private ?Campus $participantCampus = null;
 
     public function __construct()
     {

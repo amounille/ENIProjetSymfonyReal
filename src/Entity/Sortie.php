@@ -39,13 +39,13 @@ class Sortie
     private ?Lieu $sortieLieu = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
-    private ?etat $sortieEtat = null;
+    private ?Etat $sortieEtat = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
-    private ?campus $sortieCampus = null;
+    private ?Campus $sortieCampus = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
-    private ?participant $sortieParticipant = null;
+    private ?Participant $sortieParticipant = null;
 
     public function getId(): ?int
     {

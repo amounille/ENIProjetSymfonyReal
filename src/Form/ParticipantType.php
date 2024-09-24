@@ -8,6 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
+
 class ParticipantType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -18,12 +21,19 @@ class ParticipantType extends AbstractType
             ->add('telephone')
             ->add('mail')
             ->add('motPasse', PasswordType::class, [
-                'required' => false, // Si tu ne veux pas forcer la modification du mot de passe dans le formulaire d'édition
+                'required' => false,  // Permettre de laisser le mot de passe vide
+                'empty_data' => '',    // Définit une valeur vide par défaut
             ])
             ->add('actif')
-            ->add('roles')
-            ->add('participantCampus')
-        ;
+            ->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN',
+                ],
+                'multiple' => true,
+                'expanded' => true,
+            ])
+            ->add('participantCampus');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -33,3 +43,5 @@ class ParticipantType extends AbstractType
         ]);
     }
 }
+
+
