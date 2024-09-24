@@ -6,16 +6,23 @@
     <div class="container mt-5">
         <h1 class="mb-4">Liste des Sorties</h1>
 
+        <form method="GET" action="{{ path('app_home') }}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Rechercher par nom" value="{{ app.request.get('search') }}">
+                <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+            </div>
+        </form>
+
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
             <tr>
-                <th>ID</th>
                 <th>Nom</th>
                 <th>Date Heure Début</th>
                 <th>Durée</th>
                 <th>Date Limite Inscription</th>
                 <th>Nb Inscription Max</th>
                 <th>Infos Sortie</th>
+                <th>Organisateur</th>
                 <th>État</th>
                 <th>Actions</th>
             </tr>
@@ -23,24 +30,22 @@
             <tbody>
             {% for sortie in sorties %}
                 <tr>
-                    <td>{{ sortie.id }}</td>
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i') : 'N/A' }}</td>
                     <td>{{ sortie.duree ? sortie.duree|date('H:i') : 'N/A' }}</td>
                     <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i') : 'N/A' }}</td>
                     <td>{{ sortie.nbInscriptionMax }}</td>
-                    <td>{{ sortie.infosSortie }}</td>
-                    <td>{{ sortie.etat }}</td>
+                    <td>{{ sortie.infosSortie|raw }}</td>
+                    <td>{{ sortie.sortieParticipant.nom }}</td>
+                    <td>{{ sortie.sortieEtat.libelle }}</td>
                     <td>
                         <a href="{{ path('admin', {crudAction: 'edit', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-primary btn-sm">Éditer</a>
-
+                        <a href="{{ path('admin', {crudAction: 'detail', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                         <form method="post" action="{{ path('sortie_delete', {id: sortie.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
                             <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
                         </form>
-                        <a href="{{ path('admin', {crudAction: 'show', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                     </td>
-
                 </tr>
             {% else %}
                 <tr>
@@ -50,4 +55,75 @@
             </tbody>
         </table>
     </div>
+    <style>
+        /* Style général du tableau */
+        .table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        /* Style des en-têtes de tableau */
+        .thead-dark {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        /* Style des lignes du tableau */
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Style des boutons */
+        .btn {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Style des messages */
+        .text-center {
+            text-align: center;
+        }
+
+        /* Style des cellules vides */
+        .table td[colspan] {
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
 {% endblock %}
