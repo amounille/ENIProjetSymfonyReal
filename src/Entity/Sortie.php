@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SortieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -46,6 +48,14 @@ class Sortie
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     private ?Participant $sortieParticipant = null;
+
+    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'inscriptions')]
+    private Collection $participants;
+
+    public function __construct()
+    {
+        $this->participants = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -148,38 +158,62 @@ class Sortie
         return $this;
     }
 
-    public function getSortieEtat(): ?etat
+    public function getSortieEtat(): ?Etat
     {
         return $this->sortieEtat;
     }
 
-    public function setSortieEtat(?etat $sortieEtat): static
+    public function setSortieEtat(?Etat $sortieEtat): static
     {
         $this->sortieEtat = $sortieEtat;
 
         return $this;
     }
 
-    public function getSortieCampus(): ?campus
+    public function getSortieCampus(): ?Campus
     {
         return $this->sortieCampus;
     }
 
-    public function setSortieCampus(?campus $sortieCampus): static
+    public function setSortieCampus(?Campus $sortieCampus): static
     {
         $this->sortieCampus = $sortieCampus;
 
         return $this;
     }
 
-    public function getSortieParticipant(): ?participant
+    public function getSortieParticipant(): ?Participant
     {
         return $this->sortieParticipant;
     }
 
-    public function setSortieParticipant(?participant $sortieParticipant): static
+    public function setSortieParticipant(?Participant $sortieParticipant): static
     {
         $this->sortieParticipant = $sortieParticipant;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Participant[]
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Participant $participant): static
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants->add($participant);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Participant $participant): static
+    {
+        $this->participants->removeElement($participant);
 
         return $this;
     }

@@ -24,15 +24,6 @@ class ParticipantType extends AbstractType
                 'required' => false,  // Permettre de laisser le mot de passe vide
                 'empty_data' => '',    // Définit une valeur vide par défaut
             ])
-            ->add('actif')
-            ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Administrateur' => 'ROLE_ADMIN',
-                ],
-                'multiple' => true,
-                'expanded' => true,
-            ])
             ->add('participantCampus');
     }
 

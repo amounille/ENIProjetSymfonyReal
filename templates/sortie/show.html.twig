@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortie - {{ sortie.nom }}{% endblock %}
+
+{% block body %}
+    <h1>{{ sortie.nom }}</h1>
+    <p>Date de début: {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</p>
+    <p>Lieu: {{ sortie.sortieLieu.nom }}</p>
+    <p>Informations: {{ sortie.infosSortie }}</p>
+
+    <!-- Liste des participants -->
+    <h3>Participants inscrits:</h3>
+    <ul>
+        {% for participant in sortie.participants %}
+            <li>{{ participant.nom }} {{ participant.prenom }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Bouton d'inscription si l'utilisateur n'est pas déjà inscrit -->
+    {% if not sortie.participants.contains(app.user) %}
+        <a href="{{ path('sortie_inscription', {id: sortie.id}) }}" class="btn btn-primary">S'inscrire</a>
+    {% else %}
+        <p>Vous êtes déjà inscrit à cette sortie.</p>
+        <a href="{{ path('sortie_desinscription', {id: sortie.id}) }}" class="btn btn-danger">Se désinscrire</a>
+    {% endif %}
+{% endblock %}

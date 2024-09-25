@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sorties{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row -spacing-a">
+            <div class="col-md-12">
+                <h1>Liste des sorties</h1>
+            </div>
+        </div>
+        <div class="row -spacing-a">
+            <div class="col-md-12">
+                <table class="table-profile">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Date de début</th>
+                        <th>Lieu</th>
+                        <th>Inscription</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for sortie in sorties %}
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                            <td>{{ sortie.sortieLieu.nom }}</td>
+                            <td>
+                                {% if sortie.participants.contains(user) %}
+                                    <span class="inscrit">Inscrit</span>
+                                {% else %}
+                                    <span class="non-inscrit">Non inscrit</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn--green">Voir</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">Aucune sortie disponible</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .col-md-12 {
+            margin-top: 3.125rem;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            color: black;
+            font-size: 2.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table th {
+            color: black;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        table td {
+            color: black;
+        }
+
+        .btn {
+            border: none;
+            background: #FFF;
+            border-radius: 0;
+            padding: 0.875rem 0.625rem;
+            cursor: pointer;
+        }
+
+        .btn--green {
+            background: #6A0DAD;
+            color: #FFF;
+        }
+
+        .inscrit {
+            color: green;
+        }
+
+        .non-inscrit {
+            color: red;
+        }
+
+        .table-profile {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-profile td {
+            padding: 0.5rem;
+            vertical-align: top;
+        }
+
+        .table-profile td:first-child {
+            width: 150px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .table-profile td:last-child {
+            color: black;
+        }
+    </style>
+{% endblock %}

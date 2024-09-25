@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+    <h1>{{ message }}</h1>
+    <p>Cette page est réservée aux administrateurs. Ici, vous pouvez gérer les sorties et les utilisateurs.</p>
+
+    <style>
+        /* Style général du tableau */
+        .table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        /* Style des en-têtes de tableau */
+        .thead-dark {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        /* Style des lignes du tableau */
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Style des boutons */
+        .btn {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Style des messages */
+        .text-center {
+            text-align: center;
+        }
+
+        /* Style des cellules vides */
+        .table td[colspan] {
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
+{% endblock %}
