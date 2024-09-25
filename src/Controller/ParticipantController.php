@@ -52,20 +52,20 @@ class ParticipantController extends AbstractController
         ]);
     }
 
-    // Afficher un participant
     #[Route('/{id}', name: 'app_participant_show', methods: ['GET'])]
     public function show(int $id, EntityManagerInterface $entityManager): Response
     {
         $participant = $entityManager->getRepository(Participant::class)->find($id);
 
         if (!$participant) {
-            throw $this->createNotFoundException('Participant not found');
+            throw $this->createNotFoundException('Participant non trouvé.');
         }
 
         return $this->render('participant/show.html.twig', [
             'participant' => $participant,
         ]);
     }
+
 
     // Éditer un participant
     #[Route('/{id}/edit', name: 'app_participant_edit', methods: ['GET', 'POST'])]
@@ -90,7 +90,7 @@ class ParticipantController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_participant_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('participant/edit.html.twig', [

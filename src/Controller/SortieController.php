@@ -18,14 +18,17 @@ class SortieController extends AbstractController
     #[Route('/', name: 'app_sortie_index', methods: ['GET'])]
     public function index(SortieRepository $sortieRepository): Response
     {
-        // Récupère toutes les sorties
-        $sorties = $sortieRepository->findAll();
-        // Récupère l'utilisateur connecté
         $user = $this->getUser();
+
+        // Si l'utilisateur est admin, il peut voir toutes les sorties
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            $sorties = $sortieRepository->findAll(); // Admin voit toutes les sorties
+        } else {
+            $sorties = $sortieRepository->findBy(['etat' => 'Ouverte']); // Les autres voient seulement les sorties ouvertes
+        }
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
-            'user' => $user,
         ]);
     }
     #[Route('/{id}', name: 'sortie_show', methods: ['GET'])]

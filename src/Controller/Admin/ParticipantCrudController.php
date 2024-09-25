@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -37,9 +38,18 @@ class ParticipantCrudController extends AbstractCrudController
             TextField::new('prenom', 'Prénom'),
             EmailField::new('mail', 'Email'),
             TextField::new('telephone', 'Téléphone'),
-            ArrayField::new('roles', 'Rôles'),
-            BooleanField::new('actif', 'Actif'),
 
+            // Utilisation du ChoiceField pour les rôles avec autorisation de multiples choix
+            ChoiceField::new('roles', 'Rôles')
+                ->setChoices([
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN',
+                ])
+                ->allowMultipleChoices(true) // Autorise les rôles multiples, retourne un tableau
+                ->renderExpanded(false) // Liste déroulante
+                ->renderAsBadges(), // Les rôles s'afficheront sous forme de badges en lecture seule
+
+            BooleanField::new('actif', 'Actif'),
             TextField::new('motPasse', 'Mot de passe')
                 ->setFormType(PasswordType::class)
                 ->onlyOnForms()
@@ -50,7 +60,7 @@ class ParticipantCrudController extends AbstractCrudController
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if ($entityInstance instanceof Participant) {
-            // Vérifie si un mot de passe a été fourni
+            // Hacher le mot de passe s'il est défini
             if ($entityInstance->getMotPasse() !== null) {
                 $encodedPassword = $this->passwordHasher->hashPassword(
                     $entityInstance,
@@ -66,7 +76,7 @@ class ParticipantCrudController extends AbstractCrudController
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if ($entityInstance instanceof Participant) {
-            // Vérifie si un nouveau mot de passe a été fourni
+            // Hacher le mot de passe s'il est modifié
             if ($entityInstance->getMotPasse() !== null) {
                 $encodedPassword = $this->passwordHasher->hashPassword(
                     $entityInstance,
@@ -86,4 +96,3 @@ class ParticipantCrudController extends AbstractCrudController
             ->add(Crud::PAGE_EDIT, Action::DETAIL);
     }
 }
-

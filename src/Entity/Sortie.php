@@ -34,13 +34,11 @@ class Sortie
     #[ORM\Column(length: 255)]
     private ?string $infosSortie = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $etat = null;
-
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     private ?Lieu $sortieLieu = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\ManyToOne(targetEntity: Etat::class)]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Etat $sortieEtat = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]

@@ -41,29 +41,42 @@
                             </tr>
                             <tr>
                                 <td><strong>Rôles :</strong></td>
-                                <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
+                                <td>
+                                    {% for role in participant.roles %}
+                                        {% if role == 'ROLE_ADMIN' %}
+                                            Administrateur
+                                        {% elseif role == 'ROLE_USER' %}
+                                            Utilisateur
+                                        {% else %}
+                                            {{ role }}
+                                        {% endif %}
+                                        {% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-md-12 text-right">
-                        <a href="{{ path('app_participant_edit', {'id': participant.id}) }}" class="btn btn--green">
-                            <span class="btn__label">Modifier</span>
-                        </a>
-                    </div>
-                    <div class="col-md-12 text-right">
 
-                    <a href="{{ path('app_participant_index') }}" class="btn btn--green">
-                            <span class="btn__label">Retour à la liste</span>
-                        </a>
-                    </div>
-                    <div class="col-md-12 text-right">
-                        <!-- Formulaire de suppression -->
-                        <form method="post" action="{{ path('app_participant_delete', {'id': participant.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');" style="display:inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ participant.id) }}">
-                            <button class="btn btn--green"><span class="btn__label">Supprimer</span></button>
-                        </form>
-                    </div>
-                    </div>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <!-- Les boutons Modifier et Supprimer ne s'affichent que pour les administrateurs -->
+                        <div class="col-md-12 text-right">
+                            <a href="{{ path('app_participant_edit', {'id': participant.id}) }}" class="btn btn--green">
+                                <span class="btn__label">Modifier</span>
+                            </a>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <a href="{{ path('app_participant_index') }}" class="btn btn--green">
+                                <span class="btn__label">Retour à la liste</span>
+                            </a>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <!-- Formulaire de suppression -->
+                            <form method="post" action="{{ path('app_participant_delete', {'id': participant.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ participant.id) }}">
+                                <button class="btn btn--green"><span class="btn__label">Supprimer</span></button>
+                            </form>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
