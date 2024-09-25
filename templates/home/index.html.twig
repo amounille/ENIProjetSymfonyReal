@@ -5,13 +5,32 @@
 {% block body %}
     <div class="container mt-5">
         <h1 class="mb-4">Liste des Sorties</h1>
-
         <form method="GET" action="{{ path('app_home') }}" class="mb-4">
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <input type="text" name="search" class="form-control" placeholder="Rechercher par nom" value="{{ app.request.get('search') }}">
+                <select name="campus" class="form-select">
+                    <option value="">Tous les campus</option>
+                    {% set campuses = sorties|map(sortie => sortie.sortieCampus.nom) %}
+                    {% for campus in campuses %}
+                        <option value="{{ campus }}" {% if campus == app.request.get('campus') %}selected{% endif %}>{{ campus }}</option>
+                    {% endfor %}
+                </select>
+                <input type="date" name="date_debut" class="form-control" placeholder="Date de début" value="{{ app.request.get('date_debut') }}">
+                <input type="date" name="date_fin" class="form-control" placeholder="Date de fin" value="{{ app.request.get('date_fin') }}">
+                <div class="form-check">
+                    <input type="checkbox" name="created_by_me" class="form-check-input" id="created_by_me" {% if app.request.get('created_by_me') %}checked{% endif %}>
+                    <label class="form-check-label" for="created_by_me">Afficher uniquement mes sorties</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="show_completed" class="form-check-input" id="show_completed" {% if app.request.get('show_completed') %}checked{% endif %}>
+                    <label class="form-check-label" for="show_completed">Afficher les sorties terminées</label>
+                </div>
                 <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
             </div>
         </form>
+
+
+
 
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
@@ -38,6 +57,7 @@
                     <td>{{ sortie.infosSortie|raw }}</td>
                     <td>{{ sortie.sortieParticipant.nom }}</td>
                     <td>{{ sortie.sortieEtat.libelle }}</td>
+
                     <td>
                         <a href="{{ path('admin', {crudAction: 'edit', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-primary btn-sm">Éditer</a>
                         <a href="{{ path('admin', {crudAction: 'detail', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-info btn-sm">Afficher</a>

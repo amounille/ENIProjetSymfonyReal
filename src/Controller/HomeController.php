@@ -21,24 +21,70 @@ class HomeController extends AbstractController
     }
 
     #[Route('/', name: 'app_home')]
-    public function index(Request $request): Response
+    public function index(Request $request, SortieRepository $sortieRepository): Response
     {
         $search = $request->query->get('search');
+        $campus = $request->query->get('campus');
+        $dateDebut = $request->query->get('date_debut');
+        $dateFin = $request->query->get('date_fin');
+        $createdByMe = $request->query->get('created_by_me');
+        $showCompleted = $request->query->get('show_completed');
 
+        // Récupération de toutes les sorties
+        $sorties = $sortieRepository->findAll();
+
+        // Filtrer par nom
         if ($search) {
-            $sorties = $this->sortieRepository->createQueryBuilder('s')
-                ->where('s.nom LIKE :search')
-                ->setParameter('search', '%' . $search . '%')
-                ->getQuery()
-                ->getResult();
-        } else {
-            $sorties = $this->sortieRepository->findAll();
+            $sorties = array_filter($sorties, function ($sortie) use ($search) {
+                return stripos($sortie->getNom(), $search) !== false;
+            });
+        }
+
+        // Filtrer par campus
+        if ($campus) {
+            $sorties = array_filter($sorties, function ($sortie) use ($campus) {
+                return $sortie->getSortieCampus() && $sortie->getSortieCampus()->getNom() === $campus;
+            });
+        }
+
+        // Filtrer par date
+        if ($dateDebut) {
+            $dateDebut = \DateTime::createFromFormat('Y-m-d', $dateDebut);
+            $sorties = array_filter($sorties, function ($sortie) use ($dateDebut) {
+                return $sortie->getDateHeureDebut() >= $dateDebut;
+            });
+        }
+
+        if ($dateFin) {
+            $dateFin = \DateTime::createFromFormat('Y-m-d', $dateFin);
+            $sorties = array_filter($sorties, function ($sortie) use ($dateFin) {
+                return $sortie->getDateHeureDebut() <= $dateFin;
+            });
+        }
+
+        // Filtrer par organisateur
+        if ($createdByMe) {
+            $currentUser = $this->getUser();
+            $sorties = array_filter($sorties, function ($sortie) use ($currentUser) {
+                return $sortie->getSortieParticipant() && $sortie->getSortieParticipant()->getId() === $currentUser->getId();
+            });
+        }
+
+        // Filtrer les sorties terminées (date de fin inférieure à la date actuelle)
+        if ($showCompleted) {
+            $currentDate = new \DateTime();
+            $sorties = array_filter($sorties, function ($sortie) use ($currentDate) {
+                return $sortie->getDateLimiteInscription() < $currentDate; // Changez cette ligne pour utiliser dateLimiteInscription
+            });
         }
 
         return $this->render('home/index.html.twig', [
             'sorties' => $sorties,
         ]);
     }
+
+
+
 
     #[Route('/sortie/delete/{id}', name: 'sortie_delete', methods: ['POST'])]
     public function delete(int $id, EntityManagerInterface $entityManager, Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
