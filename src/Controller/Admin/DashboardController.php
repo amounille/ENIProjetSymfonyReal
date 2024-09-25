@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Campus;
 use App\Entity\Etat;
 use App\Entity\Lieu;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
