@@ -2,10 +2,18 @@
 
 {% block title %}Sortie - {{ sortie.nom }}{% endblock %}
 
+{% block mapleaflet %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<link rel="stylesheet" href="/assets/leaflet/map.css"/>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{% endblock %}
+
 {% block body %}
     <h1>{{ sortie.nom }}</h1>
     <p>Date de début: {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</p>
     <p>Lieu: {{ sortie.sortieLieu.nom }}</p>
+    <div id="map"></div>
     <p>Informations: {{ sortie.infosSortie }}</p>
 
     <!-- Liste des participants -->
@@ -14,7 +22,7 @@
         {% for participant in sortie.participants %}
             <li>{{ participant.nom }} {{ participant.prenom }}</li>
         {% endfor %}
-    </ul>
+    </ul>   
 
     <!-- Bouton d'inscription si l'utilisateur n'est pas déjà inscrit -->
     {% if not sortie.participants.contains(app.user) %}
@@ -23,4 +31,9 @@
         <p>Vous êtes déjà inscrit à cette sortie.</p>
         <a href="{{ path('sortie_desinscription', {id: sortie.id}) }}" class="btn btn-danger">Se désinscrire</a>
     {% endif %}
+    
+    <input type="hidden" value="{{ sortie.sortieLieu.latitude }}" id="latitude"></p>
+    <input type="hidden" value="{{ sortie.sortieLieu.longitude }}" id="longitude"></p>
+    <!-- Display the map -->
+    <script src="/assets/leaflet/map.js"></script>
 {% endblock %}
