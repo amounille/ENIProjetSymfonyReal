@@ -9,7 +9,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\Image;
 
 class ParticipantType extends AbstractType
 {
@@ -24,7 +25,22 @@ class ParticipantType extends AbstractType
                 'required' => false,  // Permettre de laisser le mot de passe vide
                 'empty_data' => '',    // Définit une valeur vide par défaut
             ])
-            ->add('participantCampus');
+            ->add('participantCampus')
+            ->add('photo', FileType::class, [
+                'empty_data' => null,
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new Image([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Sélectionner un document JPEG ou PNG',
+                    ])
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

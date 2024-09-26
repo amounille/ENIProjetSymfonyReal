@@ -5,11 +5,16 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Service\ImagesUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\PasswordService;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/participant')]
@@ -26,7 +31,7 @@ class ParticipantController extends AbstractController
 
     // Création d'un nouveau participant
     #[Route('/new', name: 'app_participant_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, PasswordService $passwordService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, PasswordService $passwordService, ImagesUploader $imagesUploader): Response
     {
         $participant = new Participant();
         $form = $this->createForm(ParticipantType::class, $participant);
@@ -38,6 +43,22 @@ class ParticipantController extends AbstractController
             if ($plainPassword) {
                 $hashedPassword = $passwordService->encodePassword($participant, $plainPassword);
                 $participant->setMotPasse($hashedPassword);
+            }
+
+            /** @var UploadedFile $image */
+            $image = $form->get('photo')->getData();
+            if ($image) {
+
+                $filesystem = new Filesystem();
+                $photo = $imagesUploader->getImagesDirectory().DIRECTORY_SEPARATOR.$participant->getPhoto();
+                try {
+                    $filesystem->remove($photo);
+                } catch (IOExceptionInterface $exception) {
+                    echo "An error occurred while creating your directory at ".$exception->getPath();
+                }
+
+                $imageFileName = $imagesUploader->upload($image);
+                $participant->setPhoto($imageFileName);
             }
 
             $entityManager->persist($participant);
@@ -69,7 +90,7 @@ class ParticipantController extends AbstractController
 
     // Éditer un participant
     #[Route('/{id}/edit', name: 'app_participant_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, int $id, EntityManagerInterface $entityManager, PasswordService $passwordService): Response
+    public function edit(Request $request, int $id, EntityManagerInterface $entityManager, PasswordService $passwordService, ImagesUploader $imagesUploader): Response
     {
         $participant = $entityManager->getRepository(Participant::class)->find($id);
 
@@ -86,6 +107,22 @@ class ParticipantController extends AbstractController
             if ($plainPassword) {
                 $hashedPassword = $passwordService->encodePassword($participant, $plainPassword);
                 $participant->setMotPasse($hashedPassword);
+            }
+
+            /** @var UploadedFile $image */
+            $image = $form->get('photo')->getData();
+            if ($image) {
+
+                $filesystem = new Filesystem();
+                $photo = $imagesUploader->getImagesDirectory().DIRECTORY_SEPARATOR.$participant->getPhoto();
+                try {
+                    $filesystem->remove($photo);
+                } catch (IOExceptionInterface $exception) {
+                    echo "An error occurred while creating your directory at ".$exception->getPath();
+                }
+
+                $imageFileName = $imagesUploader->upload($image);
+                $participant->setPhoto($imageFileName);
             }
 
             $entityManager->flush();
