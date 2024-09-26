@@ -93,7 +93,7 @@
                                     <li>Aucun participant</li>
                                 {% endfor %}
                             </ul>
-                        </td> <!-- Affiche les participants inscrits avec un lien vers leur profil -->
+                        </td>
                         <td>
                             <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn-view btn-sm">Afficher</a>
                             <a href="{{ path('admin', {crudAction: 'edit', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-primary btn-sm">Éditer</a>
@@ -102,10 +102,6 @@
                                 <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
                             </form>
                         </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="11" class="text-center">Aucune sortie disponible.</td>
                     </tr>
                 {% endif %}
 
