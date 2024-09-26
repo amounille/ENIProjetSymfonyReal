@@ -127,7 +127,7 @@ class ParticipantController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_profile', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('participant/edit.html.twig', [

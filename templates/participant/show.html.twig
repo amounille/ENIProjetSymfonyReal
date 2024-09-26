@@ -10,6 +10,13 @@
                 <h5>Informations Générales</h5>
                 <div class="row -spacing-b">
                     <div class="col-md-12">
+
+                        {% if participant.photo %} 
+                        <img src="{{ asset('uploads/images/' ~ participant.photo) }}" style="width:200px;" />
+                        {% else %}
+                        <img src="{{ asset('images/profile-default.jpg') }}" style="width:200px;" />
+                        {% endif %}
+
                         <table class="table-profile">
                             <tr>
                                 <td><strong>ID :</strong></td>
