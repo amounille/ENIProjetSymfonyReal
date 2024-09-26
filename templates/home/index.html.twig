@@ -10,16 +10,28 @@
                 <input type="text" name="search" class="form-control" placeholder="Rechercher par nom" value="{{ app.request.get('search') }}">
                 <select name="campus" class="form-select">
                     <option value="">Tous les campus</option>
-                    {% set campuses = sorties|map(sortie => sortie.sortieCampus.nom) %}
+                    {% set campuses = sorties|map(sortie => sortie.sortieCampus.nom)|reduce((carry, item) => item in carry ? carry : carry|merge([item]), []) %}
                     {% for campus in campuses %}
                         <option value="{{ campus }}" {% if campus == app.request.get('campus') %}selected{% endif %}>{{ campus }}</option>
                     {% endfor %}
                 </select>
+
+
+
                 <input type="date" name="date_debut" class="form-control" placeholder="Date de début" value="{{ app.request.get('date_debut') }}">
                 <input type="date" name="date_fin" class="form-control" placeholder="Date de fin" value="{{ app.request.get('date_fin') }}">
                 <div class="form-check">
                     <input type="checkbox" name="created_by_me" class="form-check-input" id="created_by_me" {% if app.request.get('created_by_me') %}checked{% endif %}>
                     <label class="form-check-label" for="created_by_me">Afficher uniquement mes sorties</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="inscrit" class="form-check-input" id="inscrit" {% if app.request.get('inscrit') %}checked{% endif %}>
+                    <label class="form-check-label" for="inscrit">Afficher uniquement les sorties auxquelles je suis inscrit</label>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" name="non_inscrit" class="form-check-input" id="non_inscrit" {% if app.request.get('non_inscrit') %}checked{% endif %}>
+                    <label class="form-check-label" for="non_inscrit">Afficher uniquement les sorties où je ne suis pas inscrit</label>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" name="show_completed" class="form-check-input" id="show_completed" {% if app.request.get('show_completed') %}checked{% endif %}>

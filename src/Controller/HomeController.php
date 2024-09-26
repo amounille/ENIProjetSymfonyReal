@@ -29,6 +29,8 @@ class HomeController extends AbstractController
         $dateFin = $request->query->get('date_fin');
         $createdByMe = $request->query->get('created_by_me');
         $showCompleted = $request->query->get('show_completed');
+        $inscrit = $request->query->get('inscrit');
+        $nonInscrit = $request->query->get('non_inscrit');
 
         // Récupération de toutes les sorties
         $sorties = $sortieRepository->findAll();
@@ -70,11 +72,27 @@ class HomeController extends AbstractController
             });
         }
 
-        // Filtrer les sorties terminées (date de fin inférieure à la date actuelle)
+        // Filtrer les sorties terminées
         if ($showCompleted) {
             $currentDate = new \DateTime();
             $sorties = array_filter($sorties, function ($sortie) use ($currentDate) {
-                return $sortie->getDateLimiteInscription() < $currentDate; // Changez cette ligne pour utiliser dateLimiteInscription
+                return $sortie->getDateLimiteInscription() < $currentDate;
+            });
+        }
+
+        // Filtrer les sorties où l'utilisateur est inscrit
+        if ($inscrit) {
+            $currentUser = $this->getUser();
+            $sorties = array_filter($sorties, function ($sortie) use ($currentUser) {
+                return in_array($currentUser, $sortie->getParticipants()->toArray());
+            });
+        }
+
+        // Filtrer les sorties où l'utilisateur n'est pas inscrit
+        if ($nonInscrit) {
+            $currentUser = $this->getUser();
+            $sorties = array_filter($sorties, function ($sortie) use ($currentUser) {
+                return !in_array($currentUser, $sortie->getParticipants()->toArray());
             });
         }
 
