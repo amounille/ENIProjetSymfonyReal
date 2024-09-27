@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +31,7 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
-            'user' => $user, // Passe l'utilisateur connecté au template
+            'user' => $user,
         ]);
     }
 
@@ -111,4 +113,31 @@ class SortieController extends AbstractController
 
         return $this->redirectToRoute('sortie_show', ['id' => $sortie->getId()]);
     }
+
+    #[Route('/sortie/annuler/{id}', name: 'sortie_annuler', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function annuler(Sortie $sortie, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Vérification du token CSRF
+        if ($this->isCsrfTokenValid('annuler' . $sortie->getId(), $request->request->get('_token'))) {
+            // Récupérer l'état "Annulée" via le repository
+            $etatAnnule = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']);
+
+            if ($etatAnnule) {
+                // On modifie l'état de la sortie en "Annulée"
+                $sortie->setSortieEtat($etatAnnule);
+                $entityManager->flush(); // Assurez-vous que cette ligne est atteinte
+
+                // Ajout d'un message de succès
+                $this->addFlash('success', 'La sortie a bien été annulée.');
+            } else {
+                $this->addFlash('danger', 'Impossible de trouver l\'état "Annulée".');
+            }
+        } else {
+            $this->addFlash('danger', 'Échec de la validation du token CSRF.');
+        }
+
+        return $this->redirectToRoute('app_home');
+    }
+
 }

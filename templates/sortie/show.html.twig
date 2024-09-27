@@ -35,7 +35,7 @@
 
                 <!-- Boutons d'inscription/désinscription -->
                 <div class="actions">
-                    <a href="{{ path('app_sortie_index') }}" class="btn btn-inscription">Retour</a>
+                    <a href="{{ path('app_home') }}" class="btn btn-inscription">Retour</a>
                     {% if not sortie.participants.contains(app.user) %}
                         <a href="{{ path('sortie_inscription', {id: sortie.id}) }}" class="btn btn-inscription">S'inscrire</a>
                     {% else %}

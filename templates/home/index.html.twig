@@ -16,8 +16,6 @@
                     {% endfor %}
                 </select>
 
-
-
                 <input type="date" name="date_debut" class="form-control" placeholder="Date de début" value="{{ app.request.get('date_debut') }}">
                 <input type="date" name="date_fin" class="form-control" placeholder="Date de fin" value="{{ app.request.get('date_fin') }}">
                 <div class="form-check">
@@ -61,175 +59,205 @@
             <tbody>
             {% for sortie in sorties %}
                 {% if sortie.sortieEtat and sortie.sortieEtat.libelle == 'actif' %}
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
-                <td>{{ sortie.duree|date('H:i') }}</td>
-                <td>{{ sortie.dateLimiteInscription|date('d/m/Y H:i') }}</td>
-                <td>{{ sortie.nbInscriptionMax }}</td>
-                <td>{{ sortie.infosSortie|length > 50 ? sortie.infosSortie|slice(0, 50) ~ '...' : sortie.infosSortie|raw}}</td>
-                <td>{{ sortie.sortieParticipant.nom }} {{ sortie.sortieParticipant.prenom }}</td>
-                <td>
-                                <span class="badge {{ sortie.sortieEtat.libelle == 'Ouverte' ? 'badge-success' : 'badge-warning' }}">
-                                    {{ sortie.sortieEtat.libelle }}
-                                </span>
-                </td>
-                <td>
-                    {% if sortie.participants.contains(app.user) %}
-                        <span class="badge badge-info">Inscrit</span>
-                    {% elseif sortie.sortieEtat.libelle == 'Ouverte' %}
-                        <span class="badge badge-primary">Non inscrit</span>
-                    {% else %}
-                        <span class="badge badge-danger">Inscription fermée</span>
-                    {% endif %}
-                </td>
-                <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionMax }}
-                    {% for participant in sortie.participants %}
-                        <p>
-                            <a href="{{ path('app_participant_show', {id: participant.id}) }}">
-                                {{ participant.nom }} {{ participant.prenom }}
-                            </a>
-                        </p>
-                    {% else %}
-                        <p>Aucun participant</p>
-                    {% endfor %}
-                </td>
-                <td>
-                    <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn-view">Voir</a>
-                </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="11" class="text-center">Aucune sortie disponible</td>
-                </tr>
-                {% endif %}
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                    <td>{{ sortie.duree|date('H:i') }}</td>
+                    <td>{{ sortie.dateLimiteInscription|date('d/m/Y H:i') }}</td>
+                    <td>{{ sortie.nbInscriptionMax }}</td>
+                    <td>{{ sortie.infosSortie|length > 50 ? sortie.infosSortie|slice(0, 50) ~ '...' : sortie.infosSortie|raw}}</td>
+                    <td>{{ sortie.sortieParticipant.nom }} {{ sortie.sortieParticipant.prenom }}</td>
+                    <td>
+                    <span class="badge {{ sortie.sortieEtat.libelle == 'Ouverte' ? 'badge-success' : 'badge-warning' }}">
+                        {{ sortie.sortieEtat.libelle }}
+                    </span>
+                    </td>
+                    <td>
+                        {% if sortie.participants.contains(app.user) %}
+                            <span class="badge badge-info">Inscrit</span>
+                        {% elseif sortie.sortieEtat.libelle == 'Ouverte' %}
+                            <span class="badge badge-primary">Non inscrit</span>
+                        {% else %}
+                            <span class="badge badge-danger">Inscription fermée</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionMax }}
+                        {% for participant in sortie.participants %}
+                            <p>
+                                <a href="{{ path('app_participant_show', {id: participant.id}) }}">
+                                    {{ participant.nom }} {{ participant.prenom }}
+                                </a>
+                            </p>
+                        {% else %}
+                            <p>Aucun participant</p>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn-view">Afficher</a>
 
+                            {% if sortie.sortieParticipant.id == app.user.id or is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('admin', {crudAction: 'edit', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-edit">Éditer</a>
+                                <form method="post" action="{{ path('sortie_delete', {id: sortie.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
+                                    <button class="btn btn-delete" type="submit">Supprimer</button>
+                                </form>
+                                <!-- Nouveau bouton Annuler -->
+                                {% if sortie.sortieEtat.libelle != 'Annulée' %}
+                                    <form method="post" action="{{ path('sortie_annuler', {id: sortie.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette sortie ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ sortie.id) }}">
+                                        <button class="btn btn-annuler" type="submit">Annuler</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </td>
+
+
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="11" class="text-center">Aucune sortie disponible</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
     </div>
 
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
 
-<style>
-    body {
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-    }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    .container {
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 20px;
-    }
+        .text-center {
+            text-align: center;
+        }
 
-    .text-center {
-        text-align: center;
-    }
+        h1.page-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
 
-    h1.page-title {
-        font-size: 2.5rem;
-        color: #333;
-        margin-bottom: 2rem;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
 
-    /* Table Styling */
-    .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        background-color: #fff;
-        border-collapse: separate;
-        border-spacing: 0 15px;
-    }
+        /* Bouton Annuler (rouge) */
+        .btn-annuler {
+            background-color: #dc3545; /* Rouge */
+            color: #fff;
+        }
 
-    .table th, .table td {
-        text-align: center;
-        padding: 12px;
-        vertical-align: middle;
-        border-top: 1px solid #dee2e6;
-    }
+        .btn-annuler:hover {
+            background-color: #c82333; /* Rouge foncé au survol */
+        }
 
-    .table-header {
-        background-color: #6A0DAD;
-        color: #fff;
-        text-transform: uppercase;
-    }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #f9f9f9;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    /* Button Styles */
-    .btn {
-        padding: 10px 15px;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-view {
-        background-color: #6A0DAD;
-        color: #fff;
-    }
-
-    .btn-view:hover {
-        background-color: #5a0b99;
-    }
-
-    .btn-inscription {
-        background-color: #28a745;
-        color: #fff;
-    }
-
-    .btn-inscription:hover {
-        background-color: #218838;
-    }
-
-    /* Badge Styles */
-    .badge {
-        padding: 5px 10px;
-        border-radius: 12px;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        color: #fff;
-    }
-
-    .badge-success {
-        background-color: #28a745;
-    }
-
-    .badge-warning {
-        background-color: #ffc107;
-    }
-
-    .badge-info {
-        background-color: #17a2b8;
-    }
-
-    .badge-danger {
-        background-color: #dc3545;
-    }
-
-    .badge-primary {
-        background-color: #007bff;
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
         .table th, .table td {
-            font-size: 0.9rem;
+            text-align: center;
+            padding: 12px;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .table-header {
+            background-color: #6A0DAD;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
         }
 
         .btn {
-            font-size: 0.8rem;
-            padding: 8px 12px;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
         }
-    }
+
+        /* Bouton Afficher (vert) */
+        .btn-view {
+            background-color: #28a745; /* Vert */
+            color: #fff;
+        }
+
+        .btn-view:hover {
+            background-color: #218838; /* Vert foncé au survol */
+        }
+
+        /* Bouton Éditer (bleu) */
+        .btn-edit {
+            background-color: #007bff; /* Bleu */
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background-color: #0056b3; /* Bleu foncé au survol */
+        }
+
+        /* Bouton Supprimer (violet) */
+        .btn-delete {
+            background-color: #6A0DAD; /* Violet */
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background-color: #5a0b99; /* Violet foncé au survol */
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+        }
+
+        .badge-info {
+            background-color: #17a2b8;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+        }
+
+        .badge-primary {
+            background-color: #007bff;
+        }
     </style>
 {% endblock %}
