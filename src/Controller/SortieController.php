@@ -102,7 +102,6 @@ class SortieController extends AbstractController
         $user = $this->getUser();
 
         if ($sortie->getParticipants()->contains($user)) {
-            // Retire l'utilisateur de la sortie
             $sortie->removeParticipant($user);
             $entityManager->flush();
 
@@ -118,18 +117,17 @@ class SortieController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function annuler(Sortie $sortie, Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Vérification du token CSRF
         if ($this->isCsrfTokenValid('annuler' . $sortie->getId(), $request->request->get('_token'))) {
-            // Récupérer l'état "Annulée" via le repository
             $etatAnnule = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']);
 
             if ($etatAnnule) {
-                // On modifie l'état de la sortie en "Annulée"
                 $sortie->setSortieEtat($etatAnnule);
-                $entityManager->flush(); // Assurez-vous que cette ligne est atteinte
+                foreach ($sortie->getParticipants() as $participant) {
+                    $sortie->removeParticipant($participant);
+                }
 
-                // Ajout d'un message de succès
-                $this->addFlash('success', 'La sortie a bien été annulée.');
+                $entityManager->flush();
+                $this->addFlash('success', 'La sortie a bien été annulée et tous les participants ont été supprimés.');
             } else {
                 $this->addFlash('danger', 'Impossible de trouver l\'état "Annulée".');
             }
@@ -139,5 +137,6 @@ class SortieController extends AbstractController
 
         return $this->redirectToRoute('app_home');
     }
+
 
 }
