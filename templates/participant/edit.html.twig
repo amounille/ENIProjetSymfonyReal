@@ -3,99 +3,154 @@
 {% block title %}Modifier mon profil{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row -spacing-a">
-            <div class="col-md-12">
-                <h1>Modifier mon profil</h1>
-            </div>
+    <div class="container profile-edit-container">
+        <div class="profile-edit-header">
+            <h1>Modifier mon profil</h1>
         </div>
-        <div class="row -spacing-a">
-            <div class="col-md-8">
-                <div class="row -spacing-b">
-                    <div class="col-md-12">
-                        
-                        {% if participant.photo %} 
-                        <img src="{{ asset('uploads/images/' ~ participant.photo) }}" style="width:200px;" />
-                        {% else %}
-                        <img src="{{ asset('images/profile-default.jpg') }}" style="width:200px;" />
-                        {% endif %}
-                        
-                        {{ form_start(form) }}
 
-                        {{ form_widget(form) }}
+        <div class="profile-edit-content">
+            <div class="profile-image">
+                {% if participant.photo %}
+                    <img src="{{ asset('uploads/images/' ~ participant.photo) }}" alt="Photo de profil" />
+                {% else %}
+                    <img src="{{ asset('images/profile-default.jpg') }}" alt="Photo de profil par défaut" />
+                {% endif %}
+            </div>
 
-                        <button type="submit" class="btn btn--green">{{ button_label|default('Mettre à jour') }}</button>
-                        <p class="mt-3">
-                            <a href="{{ path('app_home') }}">Accueil</a>
-                        </p>
-                        <p class="mt-3">
-                            {{ include('participant/_delete_form.html.twig') }}
-                        </p>
+            <div class="profile-form">
+                {{ form_start(form) }}
 
-                        {{ form_end(form) }}
+                {{ form_widget(form) }}
 
-                    </div>
+
+                <div class="btnnn">
+                <button type="submit" class="btn btn--green">{{ button_label|default('Mettre à jour') }}</button>
+
+                <p class="mt-3">
+                    {{ include('participant/_delete_form.html.twig') }}
+                </p>
                 </div>
+
+                {{ form_end(form) }}
             </div>
         </div>
     </div>
 
     <style>
-        .col-md-12.text-right {
-            margin-top: 40px;
+        .btnnn {
+            display: flex;
+            gap: 20px;
+        }
+        /* Container et centrage */
+        .profile-edit-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        h1 {
-            text-transform: uppercase;
-            color: black;
+
+        .profile-edit-header h1 {
             font-size: 2.5rem;
-        }
-
-        h5 {
             text-transform: uppercase;
-            color: black;
-            font-size: 1.563rem;
+            color: #333;
         }
 
-        .-spacing-a {
-            margin-top: 3.125rem;
-        }
-        .-spacing-b {
-            margin-top: 1.875rem;
-        }
-
-        .table-profile {
+        /* Contenu de la page d'édition du profil */
+        .profile-edit-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            border-collapse: collapse;
+            max-width: 500px;
         }
 
-        .table-profile td {
-            padding: 0.5rem;
-            vertical-align: top;
+        /* Image de profil */
+        .profile-image img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
-        .table-profile td:first-child {
-            width: 150px;
+        /* Formulaire de modification */
+        .profile-form {
+            width: 100%;
+        }
+
+        .profile-form .form-group {
+            text-align: left;
+        }
+
+        .profile-form label {
             font-weight: bold;
-            color: black;
         }
 
-        .table-profile td:last-child {
-            color: black;
+        .profile-form input,
+        .profile-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
         }
 
+        /* Boutons */
         .btn {
+            padding: 0.875rem 1.25rem;
             border: none;
-            background: #FFF;
-            border-radius: 0;
-            padding: 0.875rem 0.625rem;
+            border-radius: 5px;
+            text-transform: uppercase;
             cursor: pointer;
+            font-size: 1rem;
+            background-color: #6A0DAD;
+            color: #fff;
+            transition: background-color 0.3s ease;
         }
 
+        .btn:hover {
+            background-color: #5a0b99;
+        }
 
         .btn--green {
-            background: #6A0DAD;
-            color: #FFF;
+            background-color: #6A0DAD;
+            color: #fff;
+        }
+
+        .btn--green:hover {
+            background-color: #5a0b99;
+        }
+
+        /* Lien vers l'accueil */
+        .mt-3 a {
+            color: #6A0DAD;
+            text-decoration: none;
+        }
+
+        .mt-3 a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .profile-edit-header h1 {
+                font-size: 2rem;
+            }
+
+            .profile-image img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .profile-form input,
+            .profile-form textarea {
+                font-size: 1rem;
+            }
+
+            .btn {
+                font-size: 0.875rem;
+                padding: 0.75rem 1rem;
+            }
         }
     </style>
 {% endblock %}

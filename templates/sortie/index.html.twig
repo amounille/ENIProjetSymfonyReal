@@ -5,19 +5,25 @@
 {% block body %}
     <div class="container">
         <div class="row -spacing-a">
-            <div class="col-md-12">
-                <h1>Liste des sorties</h1>
+            <div class="col-md-12 text-center">
+                <h1 class="page-title">Liste des sorties</h1>
             </div>
         </div>
         <div class="row -spacing-a">
             <div class="col-md-12">
-                <table class="table-profile">
-                    <thead>
+                <table class="table table-striped table-hover">
+                    <thead class="table-header">
                     <tr>
                         <th>Nom</th>
-                        <th>Date de début</th>
-                        <th>Lieu</th>
+                        <th>Date Heure Début</th>
+                        <th>Durée</th>
+                        <th>Date Limite Inscription</th>
+                        <th>Nb Inscription Max</th>
+                        <th>Infos Sortie</th>
+                        <th>Organisateur</th>
+                        <th>État</th>
                         <th>Inscription</th>
+                        <th>Participants</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -26,21 +32,43 @@
                         <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
-                            <td>{{ sortie.sortieLieu.nom }}</td>
+                            <td>{{ sortie.duree|date('H:i') }}</td>
+                            <td>{{ sortie.dateLimiteInscription|date('d/m/Y H:i') }}</td>
+                            <td>{{ sortie.nbInscriptionMax }}</td>
+                            <td>{{ sortie.infosSortie|length > 50 ? sortie.infosSortie|slice(0, 50) ~ '...' : sortie.infosSortie|raw}}</td>
+                            <td>{{ sortie.sortieParticipant.nom }} {{ sortie.sortieParticipant.prenom }}</td>
                             <td>
-                                {% if sortie.participants.contains(user) %}
-                                    <span class="inscrit">Inscrit</span>
-                                {% else %}
-                                    <span class="non-inscrit">Non inscrit</span>
-                                {% endif %}
+                                <span class="badge {{ sortie.sortieEtat.libelle == 'Ouverte' ? 'badge-success' : 'badge-warning' }}">
+                                    {{ sortie.sortieEtat.libelle }}
+                                </span>
                             </td>
                             <td>
-                                <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn--green">Voir</a>
+                                {% if sortie.participants.contains(user) %}
+                                    <span class="badge badge-info">Inscrit</span>
+                                {% elseif sortie.sortieEtat.libelle == 'Ouverte' %}
+                                    <span class="badge badge-primary">Non inscrit</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inscription fermée</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionMax }}
+                                {% for participant in sortie.participants %}
+                                    <p>
+                                        <a href="{{ path('app_participant_show', {id: participant.id}) }}">
+                                            {{ participant.nom }} {{ participant.prenom }}
+                                        </a>
+                                    </p>
+                                {% else %}
+                                    <p>Aucun participant</p>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn-view">Voir</a>
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="5">Aucune sortie disponible</td>
+                            <td colspan="11" class="text-center">Aucune sortie disponible</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -50,76 +78,127 @@
     </div>
 
     <style>
-        .col-md-12 {
-            margin-top: 3.125rem;
+        /* Global Styles */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
         }
 
-        h1 {
-            text-transform: uppercase;
-            color: black;
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h1.page-title {
             font-size: 2.5rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table th, table td {
-            padding: 0.5rem;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
-
-        table th {
-            color: black;
+            color: #333;
+            margin-bottom: 2rem;
             text-transform: uppercase;
-            font-weight: bold;
+            font-weight: 700;
         }
 
-        table td {
-            color: black;
-        }
-
-        .btn {
-            border: none;
-            background: #FFF;
-            border-radius: 0;
-            padding: 0.875rem 0.625rem;
-            cursor: pointer;
-        }
-
-        .btn--green {
-            background: #6A0DAD;
-            color: #FFF;
-        }
-
-        .inscrit {
-            color: green;
-        }
-
-        .non-inscrit {
-            color: red;
-        }
-
-        .table-profile {
+        /* Table Styling */
+        .table {
             width: 100%;
-            border-collapse: collapse;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            border-collapse: separate;
+            border-spacing: 0 15px;
         }
 
-        .table-profile td {
-            padding: 0.5rem;
-            vertical-align: top;
+        .table th, .table td {
+            text-align: center;
+            padding: 12px;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
         }
 
-        .table-profile td:first-child {
-            width: 150px;
-            font-weight: bold;
-            color: black;
+        .table-header {
+            background-color: #6A0DAD;
+            color: #fff;
+            text-transform: uppercase;
         }
 
-        .table-profile td:last-child {
-            color: black;
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-view {
+            background-color: #6A0DAD;
+            color: #fff;
+        }
+
+        .btn-view:hover {
+            background-color: #5a0b99;
+        }
+
+        .btn-inscription {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .btn-inscription:hover {
+            background-color: #218838;
+        }
+
+        /* Badge Styles */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+        }
+
+        .badge-info {
+            background-color: #17a2b8;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+        }
+
+        .badge-primary {
+            background-color: #007bff;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .table th, .table td {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
         }
     </style>
 {% endblock %}

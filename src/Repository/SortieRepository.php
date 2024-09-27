@@ -29,6 +29,16 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByEtatOuverte()
+    {
+        return $this->createQueryBuilder('s')
+            ->join('s.sortieEtat', 'e')
+            ->where('e.libelle = :etat')
+            ->setParameter('etat', 'Ouverte')
+            ->getQuery()
+            ->getResult();
+    }
+
 
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects

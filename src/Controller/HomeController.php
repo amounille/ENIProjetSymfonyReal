@@ -5,6 +5,7 @@ use App\Entity\Sortie;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -19,8 +20,13 @@ class HomeController extends AbstractController
     {
         $this->sortieRepository = $sortieRepository;
     }
+    #[Route('/', name: 'redirect_home')]
+    public function redirectToHome(): RedirectResponse
+    {
+        return $this->redirectToRoute('app_home');
+    }
 
-    #[Route('/', name: 'app_home')]
+    #[Route('/home', name: 'app_home')]
     public function index(Request $request, SortieRepository $sortieRepository): Response
     {
         $search = $request->query->get('search');

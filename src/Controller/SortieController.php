@@ -24,13 +24,15 @@ class SortieController extends AbstractController
         if (in_array('ROLE_ADMIN', $user->getRoles())) {
             $sorties = $sortieRepository->findAll(); // Admin voit toutes les sorties
         } else {
-            $sorties = $sortieRepository->findBy(['etat' => 'Ouverte']); // Les autres voient seulement les sorties ouvertes
+            $sorties = $sortieRepository->findByEtatOuverte();
         }
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
+            'user' => $user, // Passe l'utilisateur connecté au template
         ]);
     }
+
     #[Route('/{id}', name: 'sortie_show', methods: ['GET'])]
     public function show(int $id, SortieRepository $sortieRepository): Response
     {
@@ -48,7 +50,6 @@ class SortieController extends AbstractController
     #[Route('/sortie/{id}/inscription', name: 'sortie_inscription')]
     public function inscrire(int $id, EntityManagerInterface $entityManager): Response
     {
-        // Vérifie si l'utilisateur est authentifié
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('error', 'Vous devez être connecté pour vous inscrire à une sortie.');
@@ -61,14 +62,25 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('Sortie non trouvée');
         }
 
-        // Vérifie si l'utilisateur est déjà inscrit à la sortie
+        // Empêcher l'inscription si la sortie est en "En création"
+        if ($sortie->getSortieEtat()->getLibelle() === 'En création') {
+            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire à une sortie qui est encore en création.');
+            return $this->redirectToRoute('sortie_show', ['id' => $sortie->getId()]);
+        }
+
+        // Vérifie si la sortie est complète
+        if ($sortie->getParticipants()->count() >= $sortie->getNbInscriptionMax()) {
+            $this->addFlash('error', 'La sortie est complète.');
+            return $this->redirectToRoute('sortie_show', ['id' => $sortie->getId()]);
+        }
+
+        // Vérifie si l'utilisateur est déjà inscrit
         if ($sortie->getParticipants()->contains($user)) {
             $this->addFlash('error', 'Vous êtes déjà inscrit à cette sortie.');
         } else {
-            // Inscrit l'utilisateur à la sortie
+            // Inscrit l'utilisateur
             $sortie->addParticipant($user);
             $entityManager->flush();
-
             $this->addFlash('success', 'Vous êtes inscrit à la sortie.');
         }
 

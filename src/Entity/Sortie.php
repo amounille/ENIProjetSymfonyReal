@@ -37,7 +37,7 @@ class Sortie
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     private ?Lieu $sortieLieu = null;
 
-    #[ORM\ManyToOne(targetEntity: Etat::class)]
+    #[ORM\ManyToOne(targetEntity: Etat::class, inversedBy: 'sorties')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Etat $sortieEtat = null;
 
@@ -128,18 +128,6 @@ class Sortie
     public function setInfosSortie(string $infosSortie): static
     {
         $this->infosSortie = $infosSortie;
-
-        return $this;
-    }
-
-    public function getEtat(): ?string
-    {
-        return $this->etat;
-    }
-
-    public function setEtat(string $etat): static
-    {
-        $this->etat = $etat;
 
         return $this;
     }

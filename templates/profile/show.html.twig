@@ -3,81 +3,98 @@
 {% block title %}Mon Profil{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row -spacing-a">
-            <div class="col-md-12">
-                <h1>Profil de {{ user.nom }} {{ user.prenom }}</h1>
-            </div>
+    <div class="container profile-container">
+        <div class="profile-header">
+            <h1>Profil de {{ user.nom }} {{ user.prenom }}</h1>
         </div>
-        <div class="row -spacing-a">
-            <div class="col-md-8">
+
+        <div class="profile-content">
+            <div class="profile-image">
+                {% if user.photo %}
+                    <img src="{{ asset('uploads/images/' ~ user.photo) }}" alt="Photo de profil" />
+                {% else %}
+                    <img src="{{ asset('images/profile-default.jpg') }}" alt="Photo de profil par défaut" />
+                {% endif %}
+            </div>
+
+            <div class="profile-details">
                 <h5>Informations Générales</h5>
-                <div class="row -spacing-b">
-                    <div class="col-md-12">
+                <table class="table-profile">
+                    <tr>
+                        <td><strong>Nom :</strong></td>
+                        <td>{{ user.nom }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prénom :</strong></td>
+                        <td>{{ user.prenom }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email :</strong></td>
+                        <td>{{ user.mail }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Téléphone :</strong></td>
+                        <td>{{ user.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Campus :</strong></td>
+                        <td>{{ user.participantCampus ? user.participantCampus.nom : 'Non attribué' }}</td>
+                    </tr>
+                </table>
+            </div>
 
-                        {% if user.photo %} 
-                        <img src="{{ asset('uploads/images/' ~ user.photo) }}" style="width:200px;" />
-                        {% else %}
-                        <img src="{{ asset('images/profile-default.jpg') }}" style="width:200px;" />
-                        {% endif %}
-
-                        <table class="table-profile">
-                            <tr>
-
-                                <td><strong>Nom :</strong></td>
-                                <td>{{ user.nom }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Prénom :</strong></td>
-                                <td>{{ user.prenom }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Email :</strong></td>
-                                <td>{{ user.mail }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Téléphone :</strong></td>
-                                <td>{{ user.telephone }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Campus :</strong></td>
-                                <td>{{ user.participantCampus ? user.participantCampus.nom : 'Non attribué' }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-12 text-right">
-                        <a href="{{ path('app_participant_edit', {'id': user.id}) }}" class="btn btn--green">
-
-                            <span class="btn__label">Modifier mes informations</span>
-                        </a>
-                    </div>
-                </div>
+            <div class="profile-actions">
+                <a href="{{ path('app_participant_edit', {'id': user.id}) }}" class="btn btn--green">
+                    <span class="btn__label">Modifier mes informations</span>
+                </a>
             </div>
         </div>
     </div>
 
     <style>
-        .col-md-12.text-right {
-            margin-top: 40px;
+        /* Container et centrage */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
-        h1 {
-            text-transform: uppercase;
-            color: black;
+
+
+        .profile-header h1 {
             font-size: 2.5rem;
-        }
-
-        h5 {
             text-transform: uppercase;
-            color: black;
-            font-size: 1.563rem;
+            color: #333;
         }
 
-        .-spacing-a {
-            margin-top: 3.125rem;
+        /* Contenu du profil */
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .-spacing-b {
-            margin-top: 1.875rem;
+
+        /* Image du profil */
+        .profile-image img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Détails du profil */
+        .profile-details {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .profile-details h5 {
+            font-size: 1.5rem;
+            text-transform: uppercase;
         }
 
         .table-profile {
@@ -86,32 +103,58 @@
         }
 
         .table-profile td {
-            padding: 0.5rem;
-            vertical-align: top;
+            padding: 0.75rem 0;
+            text-align: left;
         }
 
         .table-profile td:first-child {
-            width: 150px;
             font-weight: bold;
-            color: black;
+            color: #6A0DAD;
+            width: 150px;
         }
 
-        .table-profile td:last-child {
-            color: black;
+        /* Bouton d'action */
+        .profile-actions {
+            margin-top: 1.5rem;
         }
 
         .btn {
+            padding: 0.875rem 1.25rem;
             border: none;
-            background: #FFF;
-            border-radius: 0;
-            padding: 0.875rem 0.625rem;
+            border-radius: 5px;
+            text-transform: uppercase;
             cursor: pointer;
+            font-size: 1rem;
+            background-color: #6A0DAD;
+            color: #fff;
+            transition: background-color 0.3s ease;
         }
 
+        .btn:hover {
+            background-color: #5a0b99;
+        }
 
-        .btn--green {
-            background: #6A0DAD;
-            color: #FFF;
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .profile-header h1 {
+                font-size: 2rem;
+            }
+
+            .profile-image img {
+                width: 150px;
+                height: 150px;
+            }
+
+            .profile-details {
+                padding: 1.5rem;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .btn {
+                font-size: 0.875rem;
+                padding: 0.75rem 1rem;
+            }
         }
     </style>
 {% endblock %}
