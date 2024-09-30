@@ -1,0 +1,228 @@
+/* Global Styles */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #1a73e8;
+    margin-bottom: 20px;
+}
+
+h2, h3, h4, h5, h6 {
+    color: #333;
+}
+
+h1 span {
+    color: #FFA500; /* Accent color */
+}
+
+/* Form Styling */
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 8px rgba(26, 115, 232, 0.3);
+    outline: none;
+}
+
+button {
+    background-color: #1a73e8;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #0f5bb5;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+thead {
+    background-color: #1a73e8;
+    color: #fff;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Buttons for table actions */
+.btn-view {
+    background-color: #4caf50;
+}
+
+.btn-edit {
+    background-color: #ffa500;
+}
+
+.btn-delete {
+    background-color: #f44336;
+}
+
+.btn-annuler {
+    background-color: #6c757d;
+}
+
+.btn-view:hover {
+    background-color: #45a049;
+}
+
+.btn-edit:hover {
+    background-color: #ff8c00;
+}
+
+.btn-delete:hover {
+    background-color: #e53935;
+}
+
+.btn-annuler:hover {
+    background-color: #5a6268;
+}
+
+/* Form Check Styling */
+.form-check-label {
+    font-size: 1rem;
+    margin-left: 5px;
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+/* Badges */
+.badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.875rem;
+}
+
+.badge-success {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.badge-warning {
+    background-color: #ff9800;
+    color: #fff;
+}
+
+.badge-info {
+    background-color: #1a73e8;
+    color: #fff;
+}
+
+.badge-danger {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.badge-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Action Buttons Container */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons a,
+.action-buttons form {
+    display: inline-block;
+}
+
+/* Footer */
+footer {
+    margin-top: 50px;
+    text-align: center;
+    padding: 20px;
+    background-color: #1a73e8;
+    color: #fff;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+        width: 100%;
+    }
+
+    .form-check {
+        margin-bottom: 10px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Animations */
+button, input[type="text"], input[type="date"], select {
+    transition: all 0.3s ease;
+}
