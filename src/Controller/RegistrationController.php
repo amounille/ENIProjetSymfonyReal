@@ -20,6 +20,7 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        // Dans le RegistrationController
         if ($form->isSubmitted() && $form->isValid()) {
             // Encode le mot de passe avant de l'enregistrer
             $encodedPassword = $passwordHasher->hashPassword(
@@ -28,8 +29,14 @@ class RegistrationController extends AbstractController
             );
             $user->setMotPasse($encodedPassword);
 
-            // Assigner le rôle ROLE_USER par défaut
-            $user->setRoles(['ROLE_USER']); // ou tout autre rôle approprié
+            // Récupérer les rôles sélectionnés dans le formulaire
+            $roles = $form->get('roles')->getData();
+
+            // Si aucun rôle n'est sélectionné, on attribue 'ROLE_USER' par défaut
+            if (empty($roles)) {
+                $roles = ['ROLE_USER'];
+            }
+            $user->setRoles($roles);
 
             // Assigner la valeur par défaut à 'actif'
             $user->setActif(true);
@@ -41,6 +48,7 @@ class RegistrationController extends AbstractController
             // Redirection après l'inscription réussie
             return $this->redirectToRoute('app_home');
         }
+
 
         return $this->render('registration/registration.html.twig', [
             'registrationForm' => $form->createView(),
