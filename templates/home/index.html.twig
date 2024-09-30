@@ -2,6 +2,7 @@
 
 {% block title %}Liste des Sorties{% endblock %}
 {% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 {% endblock %}
 {% block body %}
