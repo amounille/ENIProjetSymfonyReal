@@ -1,15 +1,14 @@
 /* Global Styles */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f9f9f9;
     margin: 0;
-    padding: 0;
+    padding: 0px;
     color: #333;
     line-height: 1.6;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 75%;
     margin: 0 auto;
     padding-top: 100px;
 }
@@ -76,7 +75,7 @@ table {
 }
 
 thead {
-    background-color: #1a73e8;
+    background-color: #6A0DAD;
     color: #fff;
 }
 
@@ -93,6 +92,9 @@ tbody tr:nth-child(even) {
 
 /* Buttons for table actions */
 .btn-view {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.875rem;
     background-color: #4caf50;
 }
 
