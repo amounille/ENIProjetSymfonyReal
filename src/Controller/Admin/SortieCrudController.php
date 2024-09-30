@@ -42,7 +42,6 @@ class SortieCrudController extends AbstractCrudController
             IntegerField::new('nbInscriptionMax', 'Nombre maximal d\'inscriptions'),
             TextEditorField::new('infosSortie', 'Informations sur la sortie'),
 
-            // Utilisation de l'AssociationField pour l'état
             AssociationField::new('sortieEtat', 'État')
                 ->setRequired(true)
                 ->setHelp('Choisissez l\'état de la sortie : "En création" ou "Ouverte"'),
@@ -53,45 +52,32 @@ class SortieCrudController extends AbstractCrudController
         ];
     }
 
-    // Ajout d'une logique pour définir l'état par défaut à "En création"
-    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    public function configureActions(Actions $actions): Actions
     {
-        if ($entityInstance instanceof Sortie) {
-            // Si aucun état n'est défini, on attribue l'état par défaut "En création"
-            if (!$entityInstance->getSortieEtat()) {
-                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
-                $entityInstance->setSortieEtat($etat);
-            }
-        }
-
-        parent::persistEntity($entityManager, $entityInstance);
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action->displayIf(function ($entityInstance) {
+                    return $entityInstance->getSortieParticipant() === $this->getUser() || $this->security->isGranted('ROLE_ADMIN');
+                });
+            })
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+                return $action->displayIf(function ($entityInstance) {
+                    return $entityInstance->getSortieParticipant() === $this->getUser() || $this->security->isGranted('ROLE_ADMIN');
+                });
+            })
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_EDIT, Action::DETAIL);
     }
 
     // Vérification de l'utilisateur pour autoriser la suppression
     public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if ($entityInstance instanceof Sortie) {
-            // Vérifier si l'utilisateur connecté est l'organisateur de la sortie
-            if ($entityInstance->getSortieParticipant() !== $this->getUser()) {
-                // Si l'utilisateur n'est pas l'organisateur, on bloque la suppression
+            if ($entityInstance->getSortieParticipant() !== $this->getUser() && !$this->security->isGranted('ROLE_ADMIN')) {
                 throw new AccessDeniedException('Vous n\'êtes pas autorisé à supprimer cette sortie.');
             }
         }
 
         parent::deleteEntity($entityManager, $entityInstance);
-    }
-
-    public function configureActions(Actions $actions): Actions
-    {
-        return $actions
-            // Mise à jour de l'action "delete" pour l'afficher uniquement si l'utilisateur est l'organisateur
-            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
-                return $action->displayIf(function ($entityInstance) {
-                    // Afficher le bouton supprimer uniquement si l'utilisateur connecté est l'organisateur
-                    return $entityInstance->getSortieParticipant() === $this->getUser();
-                });
-            })
-            ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->add(Crud::PAGE_EDIT, Action::DETAIL);
     }
 }
