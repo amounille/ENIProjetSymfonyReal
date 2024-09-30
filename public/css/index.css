@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-    max-width: 75%;
+    max-width: 90%;
     margin: 0 auto;
     padding-top: 100px;
 }
@@ -62,7 +62,7 @@ button {
 }
 
 button:hover {
-    background-color: #0f5bb5;
+    background-color: #4b047f;
 }
 
 /* Table Styling */
@@ -224,5 +224,35 @@ footer {
 /* Animations */
 button, input[type="text"], input[type="date"], select {
     transition: all 0.3s ease;
+    width: auto;
 }
 
+/* Buttons for table actions */
+.btn-view {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    background-color: #1a73e8; /* Couleur bleu pour "Afficher" */
+    color: #fff; /* Couleur du texte */
+    text-decoration: none; /* Enlever le soulignement */
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-edit {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    background-color: #4caf50; /* Couleur vert pour "Éditer" */
+    color: #fff; /* Couleur du texte */
+    text-decoration: none; /* Enlever le soulignement */
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Hover effects */
+.btn-view:hover {
+    background-color: #0d47a1; /* Couleur bleu foncé au survol */
+}
+
+.btn-edit:hover {
+    background-color: #388e3c; /* Couleur vert foncé au survol */
+}

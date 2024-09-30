@@ -10,7 +10,6 @@
         <h1 class="mb-4">Liste des Sorties</h1>
         <form method="GET" action="{{ path('app_home') }}" class="mb-4">
             <div class="input-group mb-3">
-                <input type="text" name="search" class="form-control" placeholder="Rechercher par nom" value="{{ app.request.get('search') }}">
                 <select name="campus" class="form-select">
                     <option value="">Tous les campus</option>
                     {% set campuses = sorties|map(sortie => sortie.sortieCampus.nom)|reduce((carry, item) => item in carry ? carry : carry|merge([item]), []) %}
@@ -18,9 +17,15 @@
                         <option value="{{ campus }}" {% if campus == app.request.get('campus') %}selected{% endif %}>{{ campus }}</option>
                     {% endfor %}
                 </select>
+                <input type="text" name="search" class="form-control" placeholder="Rechercher par nom" value="{{ app.request.get('search') }}">
 
+
+                Entre
                 <input type="date" name="date_debut" class="form-control" placeholder="Date de début" value="{{ app.request.get('date_debut') }}">
+
+                Et
                 <input type="date" name="date_fin" class="form-control" placeholder="Date de fin" value="{{ app.request.get('date_fin') }}">
+
                 <div class="form-check">
                     <input type="checkbox" name="created_by_me" class="form-check-input" id="created_by_me" {% if app.request.get('created_by_me') %}checked{% endif %}>
                     <label class="form-check-label" for="created_by_me">Afficher uniquement mes sorties</label>
