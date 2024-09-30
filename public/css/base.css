@@ -2,6 +2,16 @@ body {
     margin: 0;
     font-family: Helvetica, sans-serif;
 }
+
+img.imgheader {
+    margin-top: 5px !important;
+    width: 215px !important;
+    margin-left: 20px !important;
+}
+.sortieee {
+    padding-top: 120px;
+}
+
 .registration {
     padding: 50px 50px 50px 50px;
     justify-content: center;

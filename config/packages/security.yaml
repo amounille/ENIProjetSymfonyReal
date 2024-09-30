@@ -41,7 +41,6 @@ security:
         - { path: ^/home, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/sortie, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/registration, roles: IS_AUTHENTICATED_FULLY }
 
 
 

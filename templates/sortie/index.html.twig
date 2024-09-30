@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Sorties{% endblock %}
+
+{% block body %}
+    <div class="sortieee">
+    <div class="container">
+        <h1>Liste des sorties</h1>
+        <ul class="sortie-list">
+            {% for sortie in sorties %}
+                <li class="sortie-item">
+                    <a href="{{ path('sortie_show', { id: sortie.id }) }}" class="sortie-link">
+                        <span class="sortie-name">{{ sortie.nom }}</span>
+                        <span class="sortie-date">{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="no-sortie">Aucune sortie disponible</li>
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .sortie-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sortie-item {
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .sortie-item:hover {
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .sortie-link {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sortie-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .sortie-date {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .no-sortie {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sortie-link {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .sortie-name {
+                margin-bottom: 5px;
+            }
+
+            .sortie-date {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+{% endblock %}

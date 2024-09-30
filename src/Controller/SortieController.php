@@ -29,11 +29,12 @@ class SortieController extends AbstractController
             $sorties = $sortieRepository->findByEtatOuverte();
         }
 
-        return $this->render('sortie/index.html.twig', [
+        return $this->render('sortie/index.html.twig', [  // Utilise un fichier différent, comme "index.html.twig"
             'sorties' => $sorties,
             'user' => $user,
         ]);
     }
+
 
     #[Route('/{id}', name: 'sortie_show', methods: ['GET'])]
     public function show(int $id, SortieRepository $sortieRepository): Response
@@ -48,6 +49,7 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
         ]);
     }
+
 
     #[Route('/sortie/{id}/inscription', name: 'sortie_inscription')]
     public function inscrire(int $id, EntityManagerInterface $entityManager): Response

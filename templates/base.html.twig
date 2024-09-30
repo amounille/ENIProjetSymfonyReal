@@ -15,8 +15,7 @@
 <body>
 
 <header class="header">
-    <a href="" class="logo">Sortir.com</a>
-    <input class="menu-btn" type="checkbox" id="menu-btn" />
+    <img class="imgheader" src="{{ asset('images/logo_eni-ecole-informatique_pt.png') }}">    <input class="menu-btn" type="checkbox" id="menu-btn" />
     <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
     <ul class="menu">
         <li>
@@ -29,6 +28,12 @@
             <a href="/admin">
                 <i class="fa fa-lock fa-lg"></i>
                 <span class="nav-text">Administration</span>
+            </a>
+        </li>
+        <li>
+            <a href="/sortie">
+                <i class="fa fa-calendar fa-lg"></i> <!-- Icône changée -->
+                <span class="nav-text">Sortie</span>
             </a>
         </li>
         <li>
