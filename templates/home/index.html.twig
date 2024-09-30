@@ -47,7 +47,6 @@
                 <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
             </div>
         </form>
-
         <table class="table table-striped table-hover">
             <thead class="table-header">
             <tr>
@@ -119,12 +118,10 @@
                             {% endif %}
                         </div>
                     </td>
-
-
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="11" class="text-center">Aucune sortie disponible</td>
+                        <td colspan="11" class="text-center"></td>
                     </tr>
                 {% endif %}
             {% endfor %}
