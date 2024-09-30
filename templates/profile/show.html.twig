@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Mon Profil{% endblock %}
-
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
 {% block body %}
     <div class="container profile-container">
         <div class="profile-header">

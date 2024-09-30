@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
-
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
 {% block title %}Profil de {{ participant.nom }} {{ participant.prenom }}{% endblock %}
 
 {% block body %}
