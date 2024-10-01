@@ -39,7 +39,9 @@ class HomeController extends AbstractController
         $nonInscrit = $request->query->get('non_inscrit');
 
         // Récupération de toutes les sorties
-        $sorties = $sortieRepository->findAll();
+        //$sorties = $sortieRepository->findAll();
+        // Récupération des sorties
+        $sorties = $sortieRepository->findByEtatsAndUser($this->getUser()->getId());
 
         // Filtrer par nom
         if ($search) {
