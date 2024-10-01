@@ -168,19 +168,17 @@ tbody tr:nth-child(even) {
     color: #fff;
 }
 
+/* Styles pour les boutons d'action */
 .action-buttons {
+    justify-content: center;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
-.action-buttons a,
-.action-buttons form {
-    display: block;
-    width: 100%;
-    text-align: center;
+.action-buttons > .button-group {
+    display: flex;
+    gap: 10px;
 }
 
 
@@ -235,7 +233,7 @@ button, input[type="text"], input[type="date"], select {
 
 /* Buttons for table actions */
 .btn-view {
-    padding: 5px 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     font-size: 0.875rem;
     background-color: #1a73e8; /* Couleur bleu pour "Afficher" */
@@ -245,7 +243,7 @@ button, input[type="text"], input[type="date"], select {
 }
 
 .btn-edit {
-    padding: 5px 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     font-size: 0.875rem;
     background-color: #4caf50; /* Couleur vert pour "Éditer" */

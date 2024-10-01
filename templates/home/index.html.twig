@@ -4,6 +4,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 {% block body %}
     <div class="container mt-5">
@@ -65,66 +66,62 @@
             </thead>
             <tbody>
             {% for sortie in sorties %}
-                {% if sortie.sortieEtat and sortie.sortieEtat.libelle == 'Ouverte' or sortie.sortieEtat.libelle == 'Annulée' %}
+                <tr>
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
                     <td>{{ sortie.duree|date('H:i') }}</td>
                     <td>{{ sortie.dateLimiteInscription|date('d/m/Y H:i') }}</td>
                     <td>{{ sortie.nbInscriptionMax }}</td>
-                    <td>{{ sortie.infosSortie|length > 50 ? sortie.infosSortie|slice(0, 50) ~ '...' : sortie.infosSortie|raw}}</td>
+                    <td>{{ sortie.infosSortie|length > 50 ? sortie.infosSortie|slice(0, 50) ~ '...' : sortie.infosSortie|raw }}</td>
                     <td>{{ sortie.sortieParticipant.nom }} {{ sortie.sortieParticipant.prenom }}</td>
                     <td>
-                    <span class="badge {{ sortie.sortieEtat.libelle == 'Ouverte' ? 'badge-success' : 'badge-warning' }}">
-                        {{ sortie.sortieEtat.libelle }}
-                    </span>
+                        <span class="badge {{ sortie.sortieEtat.libelle == 'Ouverte' ? 'badge-success' : 'badge-warning' }}">
+                            {{ sortie.sortieEtat.libelle }}
+                        </span>
                     </td>
                     <td>
                         {% if sortie.participants.contains(app.user) %}
                             <span class="badge badge-info">Inscrit</span>
-                        {% elseif sortie.sortieEtat.libelle == 'Ouverte' %}
-                            <span class="badge badge-primary">Non inscrit</span>
                         {% else %}
-                            <span class="badge badge-danger">Inscription fermée</span>
+                            <span class="badge badge-primary">Non inscrit</span>
                         {% endif %}
                     </td>
-                    <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionMax }}
-                        {% for participant in sortie.participants %}
-                            <p>
-                                <a href="{{ path('app_participant_show', {id: participant.id}) }}">
-                                    {{ participant.nom }} {{ participant.prenom }}
-                                </a>
-                            </p>
-                        {% else %}
-                            <p>Aucun participant</p>
-                        {% endfor %}
-                    </td>
+                    <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionMax }}</td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn-view">Afficher</a>
-
-                            {% if sortie.sortieParticipant.id == app.user.id or is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('admin', {crudAction: 'edit', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-edit">Éditer</a>
-                                <br>
-                                <form method="post" action="{{ path('sortie_delete', {id: sortie.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
-                                    <button class="btn btn-delete" type="submit">Supprimer</button>
-                                </form>
-                                <!-- Nouveau bouton Annuler -->
-                                {% if sortie.sortieEtat.libelle != 'Annulée' %}
-                                    <form method="post" action="{{ path('sortie_annuler', {id: sortie.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette sortie ?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ sortie.id) }}">
-                                        <button class="btn btn-annuler" type="submit">Annuler</button>
-                                    </form>
+                            <!-- Groupe pour Afficher et Éditer -->
+                            <div class="button-group">
+                                <a href="{{ path('sortie_show', {id: sortie.id}) }}" class="btn btn-view">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if sortie.sortieParticipant.id == app.user.id or is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('admin', {crudAction: 'edit', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                 {% endif %}
-                            {% endif %}
+                            </div>
+                            <!-- Groupe pour Supprimer et Annuler -->
+                            <div class="button-group">
+                                {% if sortie.sortieParticipant.id == app.user.id or is_granted('ROLE_ADMIN') %}
+                                    <form method="post" action="{{ path('sortie_delete', {id: sortie.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
+                                        <button class="btn btn-delete" type="submit">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                    {% if sortie.sortieEtat.libelle != 'Annulée' %}
+                                        <form method="post" action="{{ path('sortie_annuler', {id: sortie.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette sortie ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ sortie.id) }}">
+                                            <button class="btn btn-annuler" type="submit">
+                                                <i class="fas fa-times-circle"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
                         </div>
                     </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="11" class="text-center"></td>
-                    </tr>
-                {% endif %}
+                </tr>
             {% endfor %}
             </tbody>
         </table>
