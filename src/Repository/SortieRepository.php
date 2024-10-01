@@ -38,7 +38,17 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
+    public function findByEtatsAndUser(int $idParticipant)
+    {
+        return $this->createQueryBuilder('s')
+            ->innerJoin('s.sortieEtat', 'e')
+            ->innerJoin('s.sortieParticipant', 'p')
+            ->andWhere('e.libelle IN (\'Ouverte\',\'Clôturée\',\'En cours\',\'Terminée\')')
+            ->orWhere('e.libelle = \'En création\' AND s.sortieParticipant = :idParticipant')
+            ->setParameter('idParticipant', $idParticipant)
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects

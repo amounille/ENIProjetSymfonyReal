@@ -10,9 +10,18 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    #[Required]
+    public function setUserPasswordHasherInterface(UserPasswordHasherInterface $passwordHasher) {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
@@ -86,9 +95,13 @@ class AppFixtures extends Fixture
 
         // USER
         $ludo = new Participant();
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $ludo,
+            'test'
+        );
         $ludo->setRoles(["ROLE_ADMIN"]);
         $ludo->setMail('ludovic.proux@outlook.fr');
-        $ludo->setMotPasse('test');
+        $ludo->setMotPasse($hashedPassword);
         $ludo->setNom('PROUX');
         $ludo->setPrenom('Ludovic');
         $ludo->setTelephone('0606060606');
@@ -96,9 +109,13 @@ class AppFixtures extends Fixture
         $ludo->setParticipantCampus($eniCampusNiort);
 
         $rick = new Participant();
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $rick,
+            'test'
+        );
         $rick->setRoles([""]);
         $rick->setMail('rick.bouyaghi@outlook.fr');
-        $rick->setMotPasse('test');
+        $rick->setMotPasse($hashedPassword);
         $rick->setNom('BOUYAGHI');
         $rick->setPrenom('Rick');
         $rick->setTelephone('0606060606');
@@ -106,9 +123,13 @@ class AppFixtures extends Fixture
         $rick->setParticipantCampus($eniCampusNiort);
 
         $theo = new Participant();
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $theo,
+            'test'
+        );
         $theo->setRoles([""]);
         $theo->setMail('theo.pohin@outlook.fr');
-        $theo->setMotPasse('test');
+        $theo->setMotPasse($hashedPassword);
         $theo->setNom('POHIN');
         $theo->setPrenom('Theo');
         $theo->setTelephone('0606060606');
@@ -210,15 +231,14 @@ class AppFixtures extends Fixture
         $sortieSalleNiort1->setDateheureDebut(new \DateTimeImmutable('2024-10-03 18:00:00'));
         $sortieSalleNiort1->setDuree(new \DateTimeImmutable('2000-01-01 01:00:00'));
         $sortieSalleNiort1->setDateLimiteInscription(new \DateTimeImmutable('2024-09-27 17:00:00'));
-        $sortieSalleNiort1->setNbInscriptionMax(20);
+        $sortieSalleNiort1->setNbInscriptionMax(2);
         $sortieSalleNiort1->setInfosSortie('Première soirée de la rentrée pour rencontrer les étudiants');
-        $sortieSalleNiort1->setSortieEtat($ouverte);
+        $sortieSalleNiort1->setSortieEtat($cloturee);
         $sortieSalleNiort1->setSortieParticipant($ludo);
         $sortieSalleNiort1->setSortieCampus($eniCampusNantes);
         $sortieSalleNiort1->setSortieLieu($salleNiort);
         $sortieSalleNiort1->addParticipant($ludo);
         $sortieSalleNiort1->addParticipant($theo);
-        $sortieSalleNiort1->addParticipant($rick);
         $sortieBarNiort1 = new Sortie();
         $sortieBarNiort1->setNom('Soirée entre promos');
         $sortieBarNiort1->setDateheureDebut(new \DateTimeImmutable('2024-10-03 19:00:00'));
