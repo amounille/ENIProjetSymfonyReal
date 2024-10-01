@@ -78,12 +78,23 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_show', ['id' => $sortie->getId()]);
         }
 
+
+        if ($sortie->getDateLimiteInscription() < new \DateTime('now', new \DateTimeZone('Europe/Paris'))) {
+            $this->addFlash('error', 'La sortie est cloturée.');
+            return $this->redirectToRoute('sortie_show', ['id' => $sortie->getId()]);
+        }
+
         // Vérifie si l'utilisateur est déjà inscrit
         if ($sortie->getParticipants()->contains($user)) {
             $this->addFlash('error', 'Vous êtes déjà inscrit à cette sortie.');
         } else {
             // Inscrit l'utilisateur
             $sortie->addParticipant($user);
+
+            if ($sortie->getParticipants()->count() === $sortie->getNbInscriptionMax()) {
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle'=>'Clôturée']);
+                $sortie->setSortieEtat($etat);
+            }
             $entityManager->flush();
             $this->addFlash('success', 'Vous êtes inscrit à la sortie.');
         }
@@ -105,6 +116,10 @@ class SortieController extends AbstractController
 
         if ($sortie->getParticipants()->contains($user)) {
             $sortie->removeParticipant($user);
+            if ($sortie->getParticipants()->count() === $sortie->getNbInscriptionMax()) {
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle'=>'Ouverte']);
+                $sortie->setSortieEtat($etat);
+            }
             $entityManager->flush();
 
             $this->addFlash('success', 'Vous vous êtes désinscrit de la sortie.');

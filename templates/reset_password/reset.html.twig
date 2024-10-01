@@ -1,0 +1,95 @@
+{% block stylesheets %}
+    <style>
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+        /* Container principal centré */
+        .password-reset-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        /* Conteneur du formulaire de réinitialisation */
+        .password-reset-form-wrapper {
+            max-width: 600px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Titre du formulaire */
+        .password-reset-title {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #4b047f;
+            text-align: center;
+            font-weight: bold;
+        }
+
+
+        /* Bouton de soumission */
+        .password-reset-btn {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #4b047f;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .password-reset-input {
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        /* Effet de survol sur le bouton */
+        .password-reset-btn:hover {
+            background-color: #3e0367;
+        }
+
+        /* Instructions sous le formulaire */
+        .password-reset-instructions {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Ajustements pour petits écrans */
+        @media (max-width: 768px) {
+            .password-reset-form-wrapper {
+                padding: 20px;
+                max-width: 90%;
+            }
+            .password-reset-title {
+                font-size: 22px;
+            }
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="password-reset-container">
+        <div class="password-reset-form-wrapper">
+            <h1 class="password-reset-title">Réinitialiser votre mot de passe</h1>
+
+            {{ form_start(resetForm, {'attr': {'class': 'password-reset-form'}}) }}
+            <div class="password-reset-form-group">
+                {{ form_row(resetForm.plainPassword, {'attr': {'class': 'password-reset-input'}}) }}
+            </div>
+            <button class="password-reset-btn">Réinitialiser</button>
+            {{ form_end(resetForm) }}
+        </div>
+    </div>
+{% endblock %}

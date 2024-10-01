@@ -1,6 +1,6 @@
 {% block stylesheets %}
     <style>
-        *{
+        * {
             font-family: 'Roboto', sans-serif;
         }
 
@@ -64,6 +64,7 @@
             text-align: left;
             margin-bottom: 1rem;
         }
+
         .checkbox2 {
             text-align: right;
             margin-bottom: 1rem;
@@ -89,6 +90,12 @@
             color: #5a0b9f;
             text-decoration: underline;
         }
+
+        .forgot-password-link {
+            display: block;
+            text-align: right;
+            margin-bottom: 1rem;
+        }
     </style>
 {% endblock %}
 
@@ -111,6 +118,9 @@
 
         <label for="inputPassword">Mot de passe</label>
         <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+        <!-- Lien mot de passe oublié -->
+        <a href="{{ path('app_forgot_password_request') }}" class="forgot-password-link">Mot de passe oublié ?</a>
 
         <div class="checkbox2 mb-3">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
