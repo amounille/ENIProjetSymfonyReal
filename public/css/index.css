@@ -168,16 +168,21 @@ tbody tr:nth-child(even) {
     color: #fff;
 }
 
-/* Action Buttons Container */
 .action-buttons {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     gap: 10px;
 }
 
 .action-buttons a,
 .action-buttons form {
-    display: inline-block;
+    display: block;
+    width: 100%;
+    text-align: center;
 }
+
 
 /* Footer */
 footer {
@@ -210,9 +215,10 @@ footer {
     .form-check {
         margin-bottom: 10px;
     }
-
-    .action-buttons {
-        flex-direction: column;
+    .action-buttons .btn {
+        width: 100px;
+        padding: 5px;
+        margin: 5px 0;
     }
 
     button {

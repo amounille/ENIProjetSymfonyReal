@@ -104,6 +104,7 @@
 
                             {% if sortie.sortieParticipant.id == app.user.id or is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('admin', {crudAction: 'edit', crudControllerFqcn: 'App\\Controller\\Admin\\SortieCrudController', entityId: sortie.id}) }}" class="btn btn-edit">Éditer</a>
+                                <br>
                                 <form method="post" action="{{ path('sortie_delete', {id: sortie.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
                                     <button class="btn btn-delete" type="submit">Supprimer</button>
