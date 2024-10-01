@@ -233,12 +233,11 @@ class AppFixtures extends Fixture
         $sortieSalleNiort1->setDateLimiteInscription(new \DateTimeImmutable('2024-09-27 17:00:00'));
         $sortieSalleNiort1->setNbInscriptionMax(2);
         $sortieSalleNiort1->setInfosSortie('Première soirée de la rentrée pour rencontrer les étudiants');
-        $sortieSalleNiort1->setSortieEtat($cloturee);
+        $sortieSalleNiort1->setSortieEtat($ouverte);
         $sortieSalleNiort1->setSortieParticipant($ludo);
         $sortieSalleNiort1->setSortieCampus($eniCampusNantes);
         $sortieSalleNiort1->setSortieLieu($salleNiort);
         $sortieSalleNiort1->addParticipant($ludo);
-        $sortieSalleNiort1->addParticipant($theo);
         $sortieBarNiort1 = new Sortie();
         $sortieBarNiort1->setNom('Soirée entre promos');
         $sortieBarNiort1->setDateheureDebut(new \DateTimeImmutable('2024-10-03 19:00:00'));
@@ -273,7 +272,7 @@ class AppFixtures extends Fixture
         $sortieBarNiort2->setNbInscriptionMax(25);
         $sortieBarNiort2->setInfosSortie('Soirée pour l\'organisation du projet de la promo');
         $sortieBarNiort2->setSortieEtat($enCreation);
-        $sortieBarNiort2->setSortieParticipant($ludo);
+        $sortieBarNiort2->setSortieParticipant($theo);
         $sortieBarNiort2->setSortieCampus($eniCampusNiort);
         $sortieBarNiort2->setSortieLieu($barNiort);
 
