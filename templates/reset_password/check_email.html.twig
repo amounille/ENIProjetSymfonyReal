@@ -1,0 +1,79 @@
+{% block stylesheets %}
+    <style>
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+        .password-reset-confirmation {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .password-reset-confirmation p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .password-reset-confirmation a {
+            color: #4b047f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .password-reset-confirmation a:hover {
+            text-decoration: underline;
+        }
+
+        .password-reset-title {
+            font-size: 24px;
+            color: #4b047f;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .password-reset {
+            justify-content: center;
+            display: flex;
+            padding-top: 200px;
+        }
+        .home-btn {
+            background-color: #4b047f;
+            color: #fff !important;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .home-btn:hover {
+            background-color: #3e0468;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="password-reset">
+
+<div class="password-reset-confirmation">
+        <h1 class="password-reset-title">Email de réinitialisation envoyé</h1>
+        <p>
+            Si un compte correspondant à votre adresse email existe, un email vient de vous être envoyé contenant un lien pour réinitialiser votre mot de passe.
+            Ce lien expirera dans 1 heure.
+        </p>
+        <p>Si vous ne recevez pas d'email, vérifiez votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">essayez à nouveau</a>.</p>
+    <a href="{{ path('app_home') }}" class="home-btn">Accueil</a>
+
+</div>
+</div>
+{% endblock %}
