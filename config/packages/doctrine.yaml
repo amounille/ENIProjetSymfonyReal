@@ -17,6 +17,13 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
 
+        dql:
+            datetime_functions:
+                addtime: DoctrineExtensions\Query\Mysql\AddTime
+                now:  DoctrineExtensions\Query\Mysql\Now
+
+            
+
 when@test:
     doctrine:
         dbal:
