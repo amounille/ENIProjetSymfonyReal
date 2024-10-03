@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -48,6 +49,73 @@ class SortieRepository extends ServiceEntityRepository
             ->setParameter('idParticipant', $idParticipant)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findBySortiesOuvertes(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.id')
+            ->innerJoin('s.sortieEtat', 'e')
+            ->andWhere('e.libelle = :ouverte')
+            ->andWhere('s.dateLimiteInscription < :dateHeure')
+            ->setParameter('ouverte','Ouverte')
+            ->setParameter('dateHeure',new \DateTimeImmutable())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findBySortiesCloturees(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.id')
+            ->innerJoin('s.sortieEtat', 'e')
+            ->andWhere('e.libelle = :cloturee')
+            ->andWhere('s.dateHeureDebut < :dateHeure')
+            ->setParameter('cloturee','Clôturée')
+            ->setParameter('dateHeure',new \DateTimeImmutable())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findBySortiesEncours(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.id')
+            ->innerJoin('s.sortieEtat', 'e')
+            ->andWhere('e.libelle = :encours')
+            ->andWhere('ADDTIME(s.dateHeureDebut, s.duree) < NOW()')
+            ->setParameter('encours','En cours')
+            ->getQuery()
+            ->getResult();
+        
+    }
+    public function findBySortiesTermineesAnnulees(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.id')
+            ->innerJoin('s.sortieEtat', 'e')
+            ->andWhere('e.libelle = :terminee')
+            ->orWhere('e.libelle = :annulee')
+            ->andWhere('DATE_ADD(s.dateHeureDebut, :mois,\'MONTH\') < :dateHeure')
+            ->setParameter('terminee','Terminée')
+            ->setParameter('annulee','Annulée')
+            ->setParameter('mois',1)
+            ->setParameter('dateHeure',new \DateTimeImmutable())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function updateEtat(int $etatId, array $sortiesIds): void
+    {
+        $this->createQueryBuilder('s')
+            ->update()
+            ->set('s.sortieEtat', ':etatId')
+            ->andWhere('s.id IN (:sortiesIds)')
+            ->setParameter('etatId',$etatId)
+            ->setParameter('sortiesIds',$sortiesIds)
+            ->getQuery()
+            ->execute()
+        ;
     }
 
 //    /**

@@ -228,24 +228,25 @@ class AppFixtures extends Fixture
         // SORTIE
         $sortieSalleNiort1 = new Sortie();
         $sortieSalleNiort1->setNom('Soirée entre étudiants');
-        $sortieSalleNiort1->setDateheureDebut(new \DateTimeImmutable('2024-10-03 18:00:00'));
+        $sortieSalleNiort1->setDateheureDebut(new \DateTimeImmutable('2024-10-10 18:00:00'));
         $sortieSalleNiort1->setDuree(new \DateTimeImmutable('2000-01-01 01:00:00'));
-        $sortieSalleNiort1->setDateLimiteInscription(new \DateTimeImmutable('2024-09-27 17:00:00'));
-        $sortieSalleNiort1->setNbInscriptionMax(2);
+        $sortieSalleNiort1->setDateLimiteInscription(new \DateTimeImmutable('2024-10-03 12:30:00'));
+        $sortieSalleNiort1->setNbInscriptionMax(3);
         $sortieSalleNiort1->setInfosSortie('Première soirée de la rentrée pour rencontrer les étudiants');
         $sortieSalleNiort1->setSortieEtat($ouverte);
         $sortieSalleNiort1->setSortieParticipant($ludo);
         $sortieSalleNiort1->setSortieCampus($eniCampusNantes);
         $sortieSalleNiort1->setSortieLieu($salleNiort);
         $sortieSalleNiort1->addParticipant($ludo);
+        $sortieSalleNiort1->addParticipant($rick);
         $sortieBarNiort1 = new Sortie();
         $sortieBarNiort1->setNom('Soirée entre promos');
-        $sortieBarNiort1->setDateheureDebut(new \DateTimeImmutable('2024-10-03 19:00:00'));
-        $sortieBarNiort1->setDuree(new \DateTimeImmutable('2000-01-01 01:30:00'));
-        $sortieBarNiort1->setDateLimiteInscription(new \DateTimeImmutable('2024-10-01 17:00:00'));
+        $sortieBarNiort1->setDateheureDebut(new \DateTimeImmutable('2024-10-03 13:02:00'));
+        $sortieBarNiort1->setDuree(new \DateTimeImmutable('2000-01-01 01:00:00'));
+        $sortieBarNiort1->setDateLimiteInscription(new \DateTimeImmutable('2024-09-28 15:00:00'));
         $sortieBarNiort1->setNbInscriptionMax(30);
         $sortieBarNiort1->setInfosSortie('Soirée pour discuter entre collègues de promos');
-        $sortieBarNiort1->setSortieEtat($ouverte);
+        $sortieBarNiort1->setSortieEtat($enCours);
         $sortieBarNiort1->setSortieParticipant($theo);
         $sortieBarNiort1->setSortieCampus($eniCampusNiort);
         $sortieBarNiort1->setSortieLieu($barNiort);
@@ -253,12 +254,12 @@ class AppFixtures extends Fixture
         $sortieBarNiort1->addParticipant($ludo);
         $sortieSalleNiort2 = new Sortie();
         $sortieSalleNiort2->setNom('Soirée de Noël');
-        $sortieSalleNiort2->setDateheureDebut(new \DateTimeImmutable('2024-12-19 19:00:00'));
+        $sortieSalleNiort2->setDateheureDebut(new \DateTimeImmutable('2023-12-14 19:00:00'));
         $sortieSalleNiort2->setDuree(new \DateTimeImmutable('2000-01-01 02:00:00'));
-        $sortieSalleNiort2->setDateLimiteInscription(new \DateTimeImmutable('2024-12-13 17:00:00'));
+        $sortieSalleNiort2->setDateLimiteInscription(new \DateTimeImmutable('2023-12-01 17:00:00'));
         $sortieSalleNiort2->setNbInscriptionMax(25);
         $sortieSalleNiort2->setInfosSortie('Soirée pour fêter Noël avec les étudiants du campus');
-        $sortieSalleNiort2->setSortieEtat($ouverte);
+        $sortieSalleNiort2->setSortieEtat($terminee);
         $sortieSalleNiort2->setSortieParticipant($rick);
         $sortieSalleNiort2->setSortieCampus($eniCampusNiort);
         $sortieSalleNiort2->setSortieLieu($salleNiort);
@@ -275,11 +276,26 @@ class AppFixtures extends Fixture
         $sortieBarNiort2->setSortieParticipant($theo);
         $sortieBarNiort2->setSortieCampus($eniCampusNiort);
         $sortieBarNiort2->setSortieLieu($barNiort);
+        $sortieBarNiort3 = new Sortie();
+        $sortieBarNiort3->setNom('CTF');
+        $sortieBarNiort3->setDateheureDebut(new \DateTimeImmutable('2024-10-03 12:30:00'));
+        $sortieBarNiort3->setDuree(new \DateTimeImmutable('2000-01-01 02:00:00'));
+        $sortieBarNiort3->setDateLimiteInscription(new \DateTimeImmutable('2024-09-28 17:00:00'));
+        $sortieBarNiort3->setNbInscriptionMax(3);
+        $sortieBarNiort3->setInfosSortie('Soirée pour tester nos compétences sur les systèmes.');
+        $sortieBarNiort3->setSortieEtat($cloturee);
+        $sortieBarNiort3->setSortieParticipant($ludo);
+        $sortieBarNiort3->setSortieCampus($eniCampusNiort);
+        $sortieBarNiort3->setSortieLieu($barNiort);
+        $sortieBarNiort3->addParticipant($ludo);
+        $sortieBarNiort3->addParticipant($rick);
+        $sortieBarNiort3->addParticipant($theo);
 
         $manager->persist($sortieSalleNiort1);
         $manager->persist($sortieBarNiort1);
         $manager->persist($sortieSalleNiort2);
         $manager->persist($sortieBarNiort2);
+        $manager->persist($sortieBarNiort3);
 
         $manager->flush();
     }
